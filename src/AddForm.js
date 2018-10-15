@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { costAdded } from './redux_actions'
+import { userAdded } from './redux_actions'
 
 class AddForm extends React.Component {
 
@@ -13,16 +16,16 @@ class AddForm extends React.Component {
   }
 
   handleClick = () => {
-    this.props.addCost(this.state.what, this.state.who, this.state.how);
-    if(this.state.what != "" && this.state.who != "" && this.state.how != -1) {
-
+    if(this.state.what !== "" && this.state.who !== "" && parseInt(this.state.how) !== -1) {
+      if(this.props.users.indexOf(this.state.who) === -1) {
+        this.props.userAdded(this.state.who);
+      }
+      this.props.costAdded(this.state.what, this.props.users.indexOf(this.state.who), this.state.how);
     }
   }
 
   handleChange = (event) => {
-    console.log(event.target.name + " : " + event.target.value);
     this.setState({[event.target.name]: event.target.value });
-    console.log("what " + this.state.what);
   }
 
   render() {
@@ -52,4 +55,24 @@ class AddForm extends React.Component {
   }
 }
 
-export default AddForm;
+const mapStateToProps = (state) => {
+	return {
+		users : state.users
+	}
+}
+const mapDispatchToProps = (dispatch) => {
+	return {
+		costAdded: (what, who, how) => {
+      console.log("ADD " + what + ", " + who + ", " + parseInt(how));
+			dispatch(costAdded(what, who, parseInt(how)));
+		},
+    userAdded: (who) => {
+			dispatch(userAdded(who));
+    }
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddForm);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class ShoppingList extends React.Component {
 
@@ -9,7 +10,7 @@ class ShoppingList extends React.Component {
   listCost = () =>
 
     this.props.costs
-    .filter(cost => ( cost.paidBy == this.props.filter || this.props.filter == -1))
+    .filter(cost => ( cost.paidBy === parseInt(this.props.filter) || parseInt(this.props.filter) === -1))
     .map((cost) =>
       <tr>
         <td>{cost.title}</td>
@@ -19,6 +20,7 @@ class ShoppingList extends React.Component {
     );
 
   render() {
+    console.log("filter " + this.props.filter);
     return (
       <table class="table table-striped">
         <thead class="thead-dark">
@@ -36,4 +38,18 @@ class ShoppingList extends React.Component {
   }
 }
 
-export default ShoppingList;
+const mapStateToProps = (state) => {
+	return {
+		filter: state.filter,
+		costs: state.costs,
+    users : state.users
+	}
+}
+const mapDispatchToProps = (dispatch) => {
+	return {}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+) (ShoppingList);

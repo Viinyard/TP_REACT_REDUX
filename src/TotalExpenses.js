@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class TotalExpenses extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    let total = this.props.costs.filter(cost => cost.paidBy == this.props.filter || this.props.filter == -1).reduce((accumulator, value) =>
+    let total = this.props.costs.filter(cost => cost.paidBy === this.props.filter || this.props.filter === -1).reduce((accumulator, value) =>
 							 accumulator + value.amount
 						, 0)
 
@@ -28,4 +26,18 @@ class TotalExpenses extends React.Component {
   }
 }
 
-export default TotalExpenses;
+const mapStateToProps = (state) => {
+	return {
+		filter: state.filter,
+		costs: state.costs
+	 }
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+) (TotalExpenses);

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { filterChanged } from './redux_actions';
 
 class Filter extends React.Component {
 
@@ -13,7 +15,7 @@ class Filter extends React.Component {
 
     handleChange(e) //e the event
   	{
-  		this.props.filter(e.target.value);
+  		this.props.filterChanged(e.target.value);
     }
 
   render() {
@@ -35,4 +37,21 @@ class Filter extends React.Component {
   }
 }
 
-export default Filter;
+const mapStateToProps = (state) => {
+	return {
+		users : state.users
+	}
+}
+const mapDispatchToProps = (dispatch) => {
+	return {
+		filterChanged: (value) => {
+      console.log("EVENT");
+			dispatch(filterChanged(value))
+		}
+	}
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+) (Filter);
